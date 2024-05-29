@@ -15,21 +15,21 @@ import { JwtStrategy } from './strategies/jwt.strategy';
   imports: [
     UsersModule,
     LoggerModule,
-    JwtModule.registerAsync({
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: `${configService.get('JWT_EXPIRATION_TIME')}s` },
-      }),
-      inject: [ConfigService],
-    }),
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
         MONGODB_URI: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION_TIME: Joi.number().required(),
-        PORT: Joi.number().required(),
+        PORT: Joi.number().port().default(3000),
       }),
+    }),
+    JwtModule.registerAsync({
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: `${configService.get('JWT_EXPIRATION_TIME')}s` },
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [AuthController],
