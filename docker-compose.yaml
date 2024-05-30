@@ -1,8 +1,6 @@
 services:
   mongo:
     image: mongo:4.4
-    ports:
-      - "27017:27017"
   reservations:
     build:
       context: .
@@ -13,12 +11,12 @@ services:
       - ./apps/reservations/.env
     ports:
       - "3000:3000"
-    environment:
-      - MONGODB_URI=mongodb://mongo:27017/sleepr
     volumes:
       - .:/usr/src/app
     depends_on:
       - mongo
+    links:
+      - 'auth:auth'
   auth:
     build:
       context: .
@@ -29,8 +27,7 @@ services:
       - ./apps/auth/.env
     ports:
       - "3001:3001"
-    environment:
-      - MONGODB_URI=mongodb://mongo:27017/sleepr
+      - "3002:3002"
     volumes:
       - .:/usr/src/app
     depends_on:
