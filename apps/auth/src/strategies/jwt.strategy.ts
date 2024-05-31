@@ -1,14 +1,14 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { UsersService } from "../users/users.service";
 import { TokenPayload } from "../interfaces/token-payload.interface";
 
-Injectable()
+@Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @Inject(ConfigService) readonly configService: ConfigService,
+    configService: ConfigService,
     private readonly usersService: UsersService
   ) {
     super({
